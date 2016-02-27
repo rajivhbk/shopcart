@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dipper</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/myStyleSheet.css">
+    <link rel="stylesheet" href="fonts/font-awesome.min.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/angular.min.js" ></script>
+    <script src="js/myJavaScript.js"></script>
+    
+
+</head>
+
+<body ng-app="myApp" ng-controller="myCtrl">
+<nav class="navbar navbar-inverse navbar-fixied-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a href="" class="navbar-brand">Dippper</a>
+            </div>
+                <button class="btn btn-default navbar-btn cart cart-btn" style="float: right;">
+                    <span class="glyphicon glyphicon-shopping-cart"></span>&nbsp;&nbsp; CART
+                    
+                </button>
+            </div>
+        </div>
+    </nav>
+    <div class="row">
+        <div class="col-sm-4 product" ng-repeat="product in products">
+            <div class="product-container well">
+                <div class="product-header">
+                    <p class="productH">{{product.pName}}</p>
+                </div>
+                <img class="productimg" ng-src="{{product.src}}" alt="">
+                <ul>
+                    <li><i id="offerPrice" class="fa fa-inr" ng-bind="selectedItem.offerPrice*quantity"></i></li> 
+                    <li><i id="MRP" class="fa fa-inr" ng-bind="selectedItem.mrp"></i></li>
+                </ul>
+                <form action="" role="form">
+                    <div class="form-group">
+                        <label for="quantity"></label>
+                        <input type="number" value=" {{quantity}} " min="1" id="quantity" ng-model="quantity" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="sel1"></label>
+                        <select class="form-control vType" name="oType" ng-init="selectedItem=product.option[0]" ng-model="selectedItem" ng-options="item as item.oType for item in product.option">
+                        </select>
+                    </div>
+                </form>
+                <button class="btn btn-danger buy" ng-click="addToCart()"><span class="glyphicon glyphicon-shopping-cart"></span>&nbsp;&nbsp;BUY</button>
+            </div>
+        </div>
+    </div>
+    <div class="minicart">
+        <div class="minicartrow">
+            
+            
+        </div>
+    </div>
+</body>
+<script>
+    $(document).ready(function() {
+        var finalCart = [];
+        var count = 0;
+        $(".buy").on("click", function(){
+            var cart = $(".glyphicon-shopping-cart");
+            var productimg = $(this).parent(".product-container").find("img").eq(0);
+            finalCart.push({
+                name: $(this).parent(".product-container").find(".productH").html(),
+                pimg: $(this).parent(".product-container").find("img").eq(0).attr("src"),
+                vType: $(this).parent(".product-container").find(".vType option:selected").text(),
+                quantity: $(this).parent(".product-container").find("#quantity").val(),
+                subTotal: $(this).parent(".product-container").find("#offerPrice").html()
+            });
+            flyToCart($(productimg),$(cart));
+            addCartContents($(finalCart),count);
+            count++;
+            console.log(count);
+            
+        });
+        
+        $(".cart-btn, .minicart").hover(
+            function () {
+        $(".minicart").stop().slideDown(100);
+    }, function () {
+        $(".minicart").stop().slideUp(100);
+    });
+
+
+    });
+
+        var app = angular.module("myApp", []);
+        app.controller("myCtrl", function($scope) {
+            $scope.quantity = 1;
+            $scope.products = [
+                {id:1, pName:"Minute Maid,Mango", src:"img/1.jpg", packtype:"Tetrapack", option:[
+                    {oType:"200 ml", mrp:20, offerPrice:18},
+                    {oType:"500 ml", mrp:60, offerPrice:55},
+                    {oType:"1 lt", mrp:99, offerPrice:95},
+                    {oType:"5 lt", mrp:495, offerPrice:450}
+                ]},
+
+                {id:2, pName:"Eko Milk", src:"img/2.jpg", packtype:"Tetrapack", option:[
+                    {oType:"200 ml", mrp:10, offerPrice:8},
+                    {oType:"500 ml", mrp:25, offerPrice:20},
+                    {oType:"1 lt", mrp:50, offerPrice:45}
+                ]},
+
+                {id:3, pName:"DANA, UHT Milk", src:"img/3.jpg", packtype:"Tetrapack", option:[
+                    {oType:"500 ml", mrp:90, offerPrice:82},
+                    {oType:"1 lt", mrp:180, offerPrice:165},
+                    {oType:"5 lt", mrp:900, offerPrice:810}
+                ]},
+            ];
+
+        });//controller end
+
+        
+
+</script>
+</html>
